@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button trueButton;
     private Button falseButton;
     private ImageButton nextButton;
+    private ImageButton previousButton;
 
     private Questions[] questionBank = new Questions[]{
             new Questions(R.string.question_1,false),
@@ -34,17 +35,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         questionTextView = findViewById(R.id.question_textView);
         trueButton = findViewById(R.id.true_button);
         falseButton = findViewById(R.id.false_button);
         nextButton = findViewById(R.id.next_button);
+        previousButton = findViewById(R.id.previous_button);
 
         trueButton.setOnClickListener(this);
         falseButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
+        previousButton.setOnClickListener(this);
     }
 
     @Override
@@ -62,16 +62,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.next_button:
 
-                nextQuestion();
+                currentQuestion = (currentQuestion + 1) % questionBank.length;
+                updateQuestion();
 
+                break;
+
+            case R.id.previous_button:
+
+                if (currentQuestion>0){
+                    currentQuestion = (currentQuestion-1) % questionBank.length;
+                    updateQuestion();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"can\'t go back",Toast.LENGTH_SHORT).show();
+
+                }
                 break;
         }
     }
 
-    public void nextQuestion(){
-        currentQuestion = (currentQuestion + 1) % questionBank.length;
-        Log.d("NEXTQUESTION", "nextQuestion: "+ currentQuestion);
-
+    public void updateQuestion(){
+        Log.d("QUESTIONTAG", "nextQuestion: "+ currentQuestion);
         questionTextView.setText(questionBank[currentQuestion].getAnswersResId());
     }
 
